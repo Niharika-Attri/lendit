@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer  
 from models.auth import LoginInput, TokenResponse
-from core.database import conn, cursor
+from core.database import get_db
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Annotated
 import os
+import psycopg2
 
 router = APIRouter(prefix="/v1/auth", tags=["auth"])
 
@@ -28,7 +29,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 @router.post("/login", response_model=TokenResponse)
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(db: Annotated[tuple[psycopg2.extensions.connection, psycopg2.extras.RealDictCursor], Depends(get_db)], form_data: OAuth2PasswordRequestForm = Depends() ):
+    conn, cursor = db
     cursor.execute(
         """SELECT id, email, password FROM users WHERE email = %s AND is_active = TRUE""",
         (form_data.username,)  

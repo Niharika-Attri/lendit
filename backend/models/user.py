@@ -28,7 +28,7 @@ class UserUpdate(BaseModel):
     first_name: Optional[str] = Field(None, max_length=50, description="User's first name")
     last_name: Optional[str] = Field(None, max_length=50, description="User's last name")
     phone_number: Optional[str] = Field(None, max_length=15, pattern=r"^\+?[1-9]\d{1,14}$", description="Phone number (e.g., +1234567890)")
-    role: Optional[str] = Field(None, description="User role: renter, lender, or admin")
+    is_active: Optional[bool] = Field(None, description="Whether the user account is active")
 
     class Config:
         json_schema_extra = {
@@ -38,7 +38,7 @@ class UserUpdate(BaseModel):
                 "first_name": "Jane",
                 "last_name": "Smith",
                 "phone_number": "+9876543210",
-                "role": "lender"
+                "is_active": True
             }
         }
 
