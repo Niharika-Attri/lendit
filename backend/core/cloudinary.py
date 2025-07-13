@@ -10,8 +10,6 @@ cloudinary.config(
     secure=True
 )
 
-router = APIRouter(tags=["uploads"])
-
 async def upload_image(image: UploadFile):
     try:
         upload_result = upload(image.file)
