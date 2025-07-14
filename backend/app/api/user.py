@@ -14,7 +14,7 @@ router = APIRouter(prefix="/v1/users", tags=["users"])
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserCreate, db: Annotated[tuple[psycopg2.extensions.connection, psycopg2.extras.RealDictCursor], Depends(get_db)]):
     conn, cursor = db
     hashed_password = pwd_context.hash(user.password)
